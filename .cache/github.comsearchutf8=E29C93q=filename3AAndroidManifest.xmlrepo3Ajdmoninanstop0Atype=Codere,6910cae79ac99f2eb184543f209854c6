@@ -1,0 +1,6 @@
+status: 301
+content-length: 0
+location: https://github.com/search?utf8=%E2%9C%93&q=filename%3AAndroidManifest.xml+repo%3Ajdmonin/anstop%0A&type=Code&ref=searchresults
+-x-permanent-redirect-url: https://github.com/search?utf8=%E2%9C%93&q=filename%3AAndroidManifest.xml+repo%3Ajdmonin/anstop%0A&type=Code&ref=searchresults
+content-location: http://github.com/search?utf8=%E2%9C%93&q=filename%3AAndroidManifest.xml+repo%3Ajdmonin/anstop%0A&type=Code&ref=searchresults
+

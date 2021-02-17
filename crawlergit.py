@@ -20,14 +20,14 @@ def checkManifest(key):
    # key = 'CorruptCube/Java-Barcode-Scanner-Server'
 
     print("KEY = ", key)
+    
 
     url = 'http://github.com/search?utf8=%E2%9C%93&q=filename%3AAndroidManifest.xml+repo%3A' + key + '&type=Code&ref=searchresults'
-    #test = 'http://github.com/search?utf8=%E2%9C%93&q=filename%3AAndroidManifest.xml+repo%3A=alexingfds/parser+&type=Code&ref=searchresults'
-
+    
     response, payload = httplib2.Http().request(url)
     error_list_occurrences = re.findall("find any code matching", payload.decode('utf-8'))
-    #print(error_list_occurrences)
-    #print(response)
+    print(error_list_occurrences)
+    print(response)
     return not error_list_occurrences
 
 with open(input_file_path,'r') as in_file, open(filePath,'w') as out_file:

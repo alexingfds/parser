@@ -27,8 +27,7 @@ if __name__ == "__main__":
    for elem in arraysource:
        librs.append(elem[len(elem)-1])
        apps.append(elem[0])
-# print(librs)
-# print(apps)
+
 librsansdoublon = (list(dict.fromkeys(librs)))
 print(librsansdoublon)
 appsansdoublon = (list(dict.fromkeys(apps)))

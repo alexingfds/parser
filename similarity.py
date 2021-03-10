@@ -37,19 +37,19 @@ def similarity(lib1,lib2,input):
     usim = similarity / (countapplib2 + countapplib1 - similarity)
     average_similarity = (lib2similarity + lib1similarity) / 2
 
-    print('appuselib1:' + str(countapplib1))
-    print('appuselib2:' + str(countapplib2))
+    print('appuselib1==> '+ lib1+':' + str(countapplib1))
+    print('appuselib2==> '+lib2+':' + str(countapplib2))
     print('similarity apps between lib1 & lib2:' + str(similarity))
     print('amountApp: ' + str(len(arraysource) - 1))
     print('%Usimilarity:' + str(usim))
     print('%average similarity' + str(average_similarity))
-    print('moyenne Usimilarity and average_similarity: ' + str((usim + average_similarity) / 2))
+    print('Average between Usimilarity and average_similarity: ' + str((usim + average_similarity) / 2))
 
 
 
 
 if __name__ == "__main__":
-    similarity('k','c','samplesortie2.csv')
+    similarity('k','b','samplesortie2.csv')
 
 
 

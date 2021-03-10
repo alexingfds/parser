@@ -19,7 +19,7 @@ def indexdict(arraysource,librsansdoublon,appname):
     return dictindice
 
 if __name__ == "__main__":
-   arraysource = ligne("GroundTruth.csv",5)
+   arraysource = ligne("sample.csv",5)
    librs =[]
    apps = []
    arrayout = []
@@ -53,7 +53,7 @@ for elem in appsansdoublon:
     arrayout.append(arrayelem)
 print(arrayout)
 
-f = open('samplesortie1.csv', 'w')
+f = open('samplesortie2.csv', 'w')
 librsansdoublon.insert(0,'Applicatons/libraries')
 ligneEntete = ",".join(librsansdoublon) + "\n"
 f.write(ligneEntete)

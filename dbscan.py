@@ -1,4 +1,5 @@
 import csv
+import json
 
 import numpy
 
@@ -24,7 +25,7 @@ def getindex(arraytestsortie,nbcluster):
                 if (elem[1] == i):
                     elemandindex.append(arraytestsortie.index(elem) + 1)
             listclustered.append(elemandindex)
-        print(listclustered)
+        # print(listclustered)
     return(listclustered)
 
 
@@ -32,6 +33,7 @@ def getindex(arraytestsortie,nbcluster):
 
 def updateDB(arraysource,index):
     summ=''
+    tempdict=[]
     indextodelete=[]
     for cluster in index:
         for point in cluster:
@@ -46,6 +48,7 @@ def updateDB(arraysource,index):
                 # print(ajustindex)
                 if(elem[a]!='0' and elem[a]!='1'):
                     summ = summ + elem[a]
+                    tempdict.append(dictlibrary.get(elem[a]))
                 else:
                     if(elem[a] == '1' and summ !='1'):
                         summ = '1'
@@ -53,6 +56,9 @@ def updateDB(arraysource,index):
                         if(summ==''):
                             summ ='0'
 
+            if(summ !='0' and summ !='1'):
+                dictlibrary[summ] =tempdict
+                print(dictlibrary)
             elem.append(summ)
 
             # print(arraysource)
@@ -60,7 +66,9 @@ def updateDB(arraysource,index):
             # newcluster.append(summ)
             # print(newcluster)
             # newcluster=[]
-            summ=''
+            summ = ''
+            tempdict = []
+
         for item in indextodelete:
             thisindex = item -ajustindex
             elem.pop(thisindex)
@@ -143,7 +151,7 @@ def neigbors(point,data,eps,arraysource):
 def dbscan(arraysource,minpoint,epsilon):
     arraypoint=[]
     C = 0
-    print(arraysource)
+    # print(arraysource)
     for elem in arraysource[0]:
         if(arraysource[0].index(elem)!=0):
             arraypoint.append([elem,0])
@@ -155,7 +163,7 @@ def dbscan(arraysource,minpoint,epsilon):
         # print(elem[0]+' est visite ================================================')
         if(elem[1]==0):
             npoints=neigbors(elem[0],arraypoint,epsilon,arraysource)
-            # print(elem[0] + ' est visite ***************'+ str(npoints)+'nombre de voisin')
+            # print(elem[0] + ' est visite ***************'+ str(npoints)+'==='+ str(len(npoints))+ ' de voisin')
 
             if(len(npoints)<minpoint):
                 elem[1]=-1
@@ -183,36 +191,158 @@ def dbscan(arraysource,minpoint,epsilon):
     output = Cluster(arraypoint,C,C)
     return output
 def relaxdbscan(arraysource,epsilon,minpoint):
+    history=[]
     pas = 0.2
-    while(epsilon <1):
+    while(epsilon <=1):
         resultdbscan = dbscan(arraysource, minpoint, epsilon)
+        history.append(resultdbscan.getarray())
         indextoremove = getindex(resultdbscan.getarray(), resultdbscan.getnbcluste())
-        print(resultdbscan.getnbcluste())
-        print(indextoremove)
+        # print('cluster' + str(resultdbscan.getnbcluste()))
+        print('element to remove' +str( indextoremove))
         arraysource = updateDB(arraysource, indextoremove)
-        print(arraysource)
+        # print(arraysource)
         epsilon = epsilon + pas
-        print(epsilon)
+        print('epsilon = ' + str(epsilon))
+    # print(history)
+    return resultdbscan.getarray()
 
 
 
     # while (epsilonn <1):
     #     relaxdbscan(arraysource,epsilonn,minpoint)
 
+
+
+###### visualisationn#############
+
+
+def child(name, value):
+    temp = {"name": name, "value": value}
+    return temp
+
+    data["children"].append(temp)
+
+
+# fonction flat array
+def getAllClusters(resultdbscan, dictlibrary):
+    # reslutdbscan=[['f', -1], ['azde', -1], ['cmnukbgj', -1]]
+    tempArrayofClusters = []
+
+    ArrayofClusters = []
+    for elem in resultdbscan:
+        dataelem = dictlibrary.get(elem[0])
+        if (isinstance(dataelem, list)):
+            if(dataelem not in ArrayofClusters):
+                ArrayofClusters.append(dataelem)
+        else:
+            tempArrayofClusters.append(dataelem)
+
+            ArrayofClusters.append(tempArrayofClusters)
+        tempArrayofClusters=[]
+    # print("arrayofclusters")
+    # print(ArrayofClusters)
+    return ArrayofClusters
+
+
+def souscluster(clusters):
+    tempdataa = []
+
+    # clusters = ['c', 'm', 'n', 'u', ['k', 'b', ['g', 'j']]]
+    for elem in clusters:
+        if not (isinstance(elem, list)):
+            tempdataa.append(elem)
+            # return data
+
+        else:
+            # dataa.append(tempdataa)
+            tempelem = elem
+            # print(elem)
+            souscluster(tempelem)
+        # print(tempdataa)
+        if (tempdataa not in dataa):
+            dataa.append(tempdataa)
+    return dataa
+
+
+def hiearchyCluster(childcluster):
+    temp = 0
+    for elem in childcluster:
+        # print(elem)
+        if (temp == 0):
+            temp = elem
+            # print(temp)
+        else:
+            # print("yes")
+            # print(elem["children"])
+            elem["children"].append(temp)
+            temp = elem
+            # print(temp)
+
+    return temp
+
+
+def superCluster(hiarchyCluster):
+    data = {"name": "Library", "children": []}
+    data['children'].append(hiarchyCluster)
+    return data
+
+
+def subchildtwo(cluster):
+    dataarray = []
+    for array in cluster:
+        data = {"name": "Library", "children": []}
+        for elem in array:
+            data['children'].append(child(elem, 4888))
+        dataarray.append(data)
+    # print(dataarray)
+    # print(len(dataarray))
+    return dataarray[::-1]
+
+
+def geteachCluster(resultgetallclusters):
+    for elem in resultgetallclusters:
+        subdatajson.append(superCluster(hiearchyCluster(subchildtwo(souscluster(elem)))))
+        # print("etat de data")
+        # print(dataa)
+        dataa.clear()
+    return subdatajson
+
+
+def globaljsonvisualisation(subdatajson):
+    data = {"name": "Library", "children": []}
+    for elem in subdatajson:
+        data['children'].append(elem)
+    return data
+
+
 if __name__ == "__main__":
     print('My DBSC')
     # C = 0
     # index = [1, 2, 3]
+    dataa = []
+    subdatajson = []
 
-    minpt =3
-    eps =0.2
+
+    minpt =10
+    eps =0.4
     # cluster =[]
     # arrayClusters =[]
     # arraypoint = []
-    file = 'samplesortie2.csv'
+    dictlibrary={}
+    file = 'samplesortie1.csv'
 
     arraysourc = ligne(file)
-    relaxdbscan(arraysourc,eps,minpt)
+    for elem in arraysourc[0]:
+        if(arraysourc[0].index(elem) != 0):
+            dictlibrary[str(elem)] = elem
+    # print(dictlibrary)
+    print('nombre de librairies: '+ str(len(arraysourc[0])))
+    print('nombre dapplications :' + str(len(arraysourc)))
+    reslutdbscan = relaxdbscan(arraysourc,eps,minpt)
+    with open('data.json', 'w') as fp:
+        json.dump(globaljsonvisualisation(geteachCluster(getAllClusters(reslutdbscan,dictlibrary))), fp, indent=4)
+    # print
+
     # resultdbscan = dbscan(arraysource,minpt,eps)
     # indextoremove = getindex(resultdbscan.getarray(),resultdbscan.getnbcluste())
     # print(resultdbscan.getnbcluste())
